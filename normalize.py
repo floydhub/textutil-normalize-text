@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import argparse
 import csv
-import distutils.util
 import re
 
 def clean_str(string):
@@ -24,6 +23,18 @@ def clean_str(string):
     string = re.sub(r"\s{2,}", " ", string)
     return string.strip().lower()
 
+def str2bool(val):
+    """
+    Helper method to convert string to bool
+    """
+    if val is None:
+        return False
+    val = val.lower().strip()
+    if val in ['true', 't', 'yes', 'y', '1', 'on']:
+        return True
+    elif val in ['false', 'f', 'no', 'n', '0', 'off']:
+        return False
+
 def main():
     """
     Normalizes the contents of a text file using a simple naive normalization scheme.
@@ -33,13 +44,17 @@ def main():
     # Parse command line args
     parser = argparse.ArgumentParser(description='Normalize text in the given columns')
 
-    parser.add_argument('-i', '--input', required=True,
+    parser.add_argument(
+        '-i', '--input', required=True,
         help='Path to input file')
-    parser.add_argument('-c', '--cols', required=True, type=str, default=0, 
+    parser.add_argument(
+        '-c', '--cols', required=True, type=str, default=0, 
         help='Comma separated list of columns indices to normalize')
-    parser.add_argument('-d', '--delimiter', required=True, default='\t', 
+    parser.add_argument(
+        '-d', '--delimiter', required=True, default='\t', 
         help='Column delimiter between row and label')
-    parser.add_argument('-header', '--hasheader', required=False, type=distutils.util.strtobool,
+    parser.add_argument(
+        '-header', '--hasheader', required=False, type=str2bool,
         default='False', help='File has header row?')
     parser.add_argument('-o', '--output', required=True, help='Path to output file')
 
